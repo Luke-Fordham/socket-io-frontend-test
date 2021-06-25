@@ -126,12 +126,12 @@ const Chat = () => {
 
         return (
             <>
-                <div>
+                <div style={{display: 'flex', flexDirection: 'column', padding: '10px'}}>
                     {selectedUser && selectedUser.messages?.map(message => {
-                        let color = 'grey';
-                        if (message.fromSelf) color = '#35b0f0';
+                        const color = message.fromSelf ? '#35b0f0' : 'grey';
+                        const align = message.fromSelf ? '5px 0 5px auto' : '5px auto 5px 0';
                         return (
-                            <div style={{backgroundColor: color, color: 'white', padding: '10px'}}>{message.content}</div>
+                            <div style={{backgroundColor: color, color: 'white', padding: '10px', borderRadius: '5px', textAlign: 'left', maxWidth: '70%', width: 'fit-content', margin: align}}>{message.content}</div>
                         );
                     })}
                 </div>
