@@ -15,6 +15,7 @@ const Chat = () => {
     const [users, setUsers] = useState<IUser[]>();
     const [selectedUser, setSelectedUser] = useState<IUser>();
     const [newMessage, setNewMessage] = useState<{content: string, from: string}>();
+    const [connected, setConnected] = useState<string>('none');
 
     useEffect(() => {
         users && console.log("USERS: \n", users);
@@ -24,11 +25,17 @@ const Chat = () => {
         socket.on("private message", ({ content, from }) => {
             setNewMessage({content, from});
         });
-
     }, [])
 
     useEffect(() => {
-        console.log(newMessage);
+        console.log(selectedUser);
+        if (selectedUser){
+            if (selectedUser.self) {setConnected('none')}
+            else if (selectedUser.connected) {setConnected('green')} else {setConnected('red')};
+        }
+    }, [selectedUser])
+
+    useEffect(() => {
         if (newMessage) {
             const {content, from} = newMessage;
             const newList = [...users];
@@ -37,7 +44,7 @@ const Chat = () => {
                     user.messages.push({content, fromSelf: false})
                 }
                 if (user && selectedUser &&  user.userID !== selectedUser.userID){
-                    user.hasNewMessages = false;
+                    user.hasNewMessages = true;
                 }
                 setUsers(newList);
             })
@@ -48,6 +55,28 @@ const Chat = () => {
     const initReactiveProperties = (user: IUser) => {
         user.hasNewMessages = false;
     };
+
+    socket.on("connect", () => {
+        const newList = users && [...users];
+        newList && newList.length > 0 && newList.forEach((user, i) => {
+            if (user.self) {
+                user.connected = true;
+            }
+            newList[i] = user;
+            setUsers(newList);
+        });
+    });
+
+    socket.on("disconnect", () => {
+        const newList = users && [...users];
+        newList && newList.length > 0 && newList.forEach((user, i) => {
+            if (user.self) {
+                user.connected = false;
+            }
+            newList[i] = user;
+            setUsers(newList);
+        });
+    });
 
     socket.on("users", (users: IUser[]) => {
         users.forEach((user) => {
@@ -66,9 +95,7 @@ const Chat = () => {
 
     socket.on("user connected", (user) => {
         initReactiveProperties(user);
-        console.log(user);
         const newUserList = users ? [...users] : [];
-        console.log('new list', newUserList);
         newUserList.push(user);
         setUsers(newUserList);
     });
@@ -82,11 +109,6 @@ const Chat = () => {
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     const Room = () => {
         const [sendMessage, setMessage] = useState<string>();
-
-        useEffect(() => {
-            console.log('selected', selectedUser);
-        }, [selectedUser])
-
 
         const handleSend = () => {
             const sanitised = sendMessage?.split(' ').join('');
@@ -127,7 +149,7 @@ const Chat = () => {
     return (
         <>
         <div style={{width: '300px', margin: 'auto'}}>
-            <div style={{width: '300px', margin: 'auto'}}>
+            <div style={{width: '300px', margin: 'auto', border: `2px solid ${connected}`, borderRadius: '5px' }}>
                 <Select onChange={handleUserSelect} options={users && users.map(user => {
                     if (user.self){
                         return {label: `${user.username} (you)`, value: user}
