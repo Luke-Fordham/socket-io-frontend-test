@@ -1,19 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import socket from '../socket';
 import Select from 'react-select';
+import {Simulate} from "react-dom/test-utils";
 
 export interface IUser {
     hasNewMessages: boolean;
-    self: boolean;
-    userID: string;
+    self?: boolean;
+    userID?: string;
     username: string;
     messages?: {content: string, fromSelf: boolean}[];
+    connected?: boolean;
 }
 
 const Chat = () => {
 
     const [users, setUsers] = useState<IUser[]>();
-    const [selectedUserId, setSelectedUserId] = useState<string>();
+    const [selectedUser, setSelectedUser] = useState<IUser>();
 
     useEffect(() => {
         users && console.log("USERS: \n", users);
@@ -40,6 +42,7 @@ const Chat = () => {
 
     socket.on("user connected", (user) => {
             initReactiveProperties(user);
+            console.log(user);
             const newUserList = users ? [...users] : [];
             console.log('new list', newUserList);
             newUserList.push(user);
@@ -47,59 +50,36 @@ const Chat = () => {
     });
 
     const handleUserSelect = (e: any) => {
-        setSelectedUserId(e.value);
+        setSelectedUser(e.value);
     }
 
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
     const Room = () => {
         const [sendMessage, setMessage] = useState<string>();
-        const [messageList, setMessageList] = useState<{content: string, fromSelf: boolean}[]>([]);
+
+        useEffect(() => {
+        }, [selectedUser])
 
 
         const handleSend = () => {
             const sanitised = sendMessage?.split(' ').join('');
-            if (selectedUserId && sendMessage && sanitised && sanitised.length > 0) {
+            if (selectedUser && sendMessage && sanitised && sanitised.length > 0) {
                 socket.emit("private message", {
                     sendMessage,
-                    to: selectedUserId
+                    to: selectedUser.userID
                 });
-                const newMessageList = [...messageList];
-                newMessageList.push({content: sendMessage, fromSelf: true})
-                setMessageList(newMessageList);
+                const updateUserMessage = {...selectedUser}
+                updateUserMessage.messages.push({content: sendMessage, fromSelf: true});
+                setSelectedUser(updateUserMessage);
+
             }
         }
 
-        socket.on("private message", ({ content, from }) => {
-            users && users.forEach(user => {
-                if (user.userID === from) {
-                    user.messages.push({
-                        content,
-                        fromSelf: false,
-                    });
-                    if (user !== this.selectedUser) {
-                        user.hasNewMessages = true;
-                    }
-                    break;
-                }
-            })
-            for (let i = 0; i < this.users.length; i++) {
-                const user = this.users[i];
-                if (user.userID === from) {
-                    user.messages.push({
-                        content,
-                        fromSelf: false,
-                    });
-                    if (user !== this.selectedUser) {
-                        user.hasNewMessages = true;
-                    }
-                    break;
-                }
-            }
-        });
 
         return (
             <>
                 <div>
-                    {messageList.map(message => {
+                    {selectedUser?.messages?.map(message => {
                         let color = 'grey';
                         if (message.fromSelf) color = '#35b0f0';
                         return (
@@ -116,6 +96,7 @@ const Chat = () => {
             </>
         );
     }
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     return (
         <>
@@ -123,17 +104,12 @@ const Chat = () => {
             <div style={{width: '300px', margin: 'auto'}}>
                 <Select onChange={handleUserSelect} options={users && users.map(user => {
                     if (user.self){
-                        return {label: `${user.username} (you)`, value: user.userID}
+                        return {label: `${user.username} (you)`, value: user}
                     }
-                    return {label: user.username, value: user.userID}
+                    return {label: user.username, value: user}
                 })} />
             </div>
-            {selectedUserId && users && users.map(user => {
-                console.log(String(user.userID) === String(selectedUserId));
-                return (
-                    String(user.userID) === String(selectedUserId) && <Room users={users} selectedUserId={selectedUserId}/>
-                );
-            })}
+            <Room />
         </div>
         </>
     );
