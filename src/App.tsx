@@ -40,7 +40,7 @@ export default function App() {
                            onChange={(e) => setUsername(e.target.value)}/>
                     <button onClick={handleSubmit}>Send</button>
                 </> :
-                <Chat/>
+                <Chat />
             }
         </div>
     );

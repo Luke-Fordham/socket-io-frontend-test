@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import socket from '../socket';
 import Select from 'react-select';
-import {Simulate} from "react-dom/test-utils";
 
 export interface IUser {
     hasNewMessages: boolean;
@@ -13,13 +12,38 @@ export interface IUser {
 }
 
 const Chat = () => {
-
     const [users, setUsers] = useState<IUser[]>();
     const [selectedUser, setSelectedUser] = useState<IUser>();
+    const [newMessage, setNewMessage] = useState<{content: string, from: string}>();
 
     useEffect(() => {
         users && console.log("USERS: \n", users);
     }, [users])
+
+    useEffect(() => {
+        socket.on("private message", ({ content, from }) => {
+            setNewMessage({content, from});
+        });
+
+    }, [])
+
+    useEffect(() => {
+        console.log(newMessage);
+        if (newMessage) {
+            const {content, from} = newMessage;
+            const newList = [...users];
+            newList && newList.length > 0 && newList.forEach(user => {
+                if (user && user.userID === from){
+                    user.messages.push({content, fromSelf: false})
+                }
+                if (user && selectedUser &&  user.userID !== selectedUser.userID){
+                    user.hasNewMessages = false;
+                }
+                setUsers(newList);
+            })
+            return;
+        }
+    }, [newMessage && newMessage.content])
 
     const initReactiveProperties = (user: IUser) => {
         user.hasNewMessages = false;
@@ -41,23 +65,26 @@ const Chat = () => {
     });
 
     socket.on("user connected", (user) => {
-            initReactiveProperties(user);
-            console.log(user);
-            const newUserList = users ? [...users] : [];
-            console.log('new list', newUserList);
-            newUserList.push(user);
-            setUsers(newUserList);
+        initReactiveProperties(user);
+        console.log(user);
+        const newUserList = users ? [...users] : [];
+        console.log('new list', newUserList);
+        newUserList.push(user);
+        setUsers(newUserList);
     });
 
     const handleUserSelect = (e: any) => {
         setSelectedUser(e.value);
     }
 
+
+
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     const Room = () => {
         const [sendMessage, setMessage] = useState<string>();
 
         useEffect(() => {
+            console.log('selected', selectedUser);
         }, [selectedUser])
 
 
@@ -65,7 +92,7 @@ const Chat = () => {
             const sanitised = sendMessage?.split(' ').join('');
             if (selectedUser && sendMessage && sanitised && sanitised.length > 0) {
                 socket.emit("private message", {
-                    sendMessage,
+                    content: sendMessage,
                     to: selectedUser.userID
                 });
                 const updateUserMessage = {...selectedUser}
@@ -75,11 +102,10 @@ const Chat = () => {
             }
         }
 
-
         return (
             <>
                 <div>
-                    {selectedUser?.messages?.map(message => {
+                    {selectedUser && selectedUser.messages?.map(message => {
                         let color = 'grey';
                         if (message.fromSelf) color = '#35b0f0';
                         return (
