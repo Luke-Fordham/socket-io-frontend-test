@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import socket from '../socket';
-import Select from 'react-select';
-import {Link, Switch, Route, BrowserRouter as Router, useRouteMatch} from 'react-router-dom'
+import {Link, Switch, Route, BrowserRouter as Router} from 'react-router-dom'
+import Room from './Room';
 
 export interface IUser {
     hasNewMessages: boolean;
@@ -14,8 +14,6 @@ export interface IUser {
 
 const Chat = () => {
     const [users, setUsers] = useState<IUser[]>();
-    const [selectedUser, setSelectedUser] = useState<IUser>();
-    const [newMessage, setNewMessage] = useState<{ content: string, from: string }>();
     const [connected, setConnected] = useState<string>('none');
 
     const initReactiveProperties = (user: IUser) => {
@@ -72,90 +70,21 @@ const Chat = () => {
     //     });
     // });
 
-    // // ------------------------------------------------------------------------------------------------------------------------------------------------------
-    const Room = () => {
-        const [user, setUser] = useState<IUser>(null);
-        const [sendMessage, setMessage] = useState<string>();
-        const match = useRouteMatch()
-        const [messages, setMessages] = useState<{ content: string, fromSelf: boolean }[]>([]);
-
-        useEffect(() => {
-            const getUser = async () => {
-                try {
-                    const url = `http://localhost:8080/get-single-user/${match.params.id}`;
-
-                    const response = await fetch(url);
-                    const results = await response.json();
-                    console.log(results);
-                    if (results.success) {
-                        setUser(results.user);
-                    }
-                } catch (e) {
-                    console.log(e.message);
-                }
-            };
-            getUser();
-
-            return () => {
-                setMessages([])
-            }
-        }, [match && match.params.id])
-
-        useEffect(() => {
-                socket.on("private message", ({ content, from }) => {
-                    messages && setMessages([...messages, {content, fromSelf: false}])
-                });
-        }, [messages])
-
-        const handleSend = () => {
-            const sanitised = sendMessage?.split(' ').join('');
-            if (user && sendMessage && sanitised && sanitised.length > 0) {
-                socket.emit("private message", {
-                    content: sendMessage,
-                    to: user.userID
-                });
-                setMessages([...messages, {content: sendMessage, fromSelf: true}]);
-                setMessage('');
-            }
-        }
-
-        return (
-            <>
-                <p>Room {user && user.userID}</p>
-                <div style={{display: 'flex', flexDirection: 'column', padding: '10px'}}>
-                    {messages && messages.map(message => {
-                        const color = message.fromSelf ? '#35b0f0' : 'grey';
-                        const align = message.fromSelf ? '5px 0 5px auto' : '5px auto 5px 0';
-                        return (
-                            <div style={{backgroundColor: color, color: 'white', padding: '10px', borderRadius: '5px', textAlign: 'left', maxWidth: '70%', width: 'fit-content', margin: align}}>{message.content}</div>
-                        );
-                    })}
-                </div>
-                <div style={{margin: '100px auto 0', width: 'fit-content'}}>
-                    <textarea value={sendMessage && sendMessage} onChange={(e) => setMessage(e.target.value)} style={{height: '50px', width: '300px'}}/>
-                    <div style={{margin: 'auto 0 auto auto'}}>
-                        <button onClick={handleSend} style={{float: 'right'}}>Send</button>
-                    </div>
-                </div>
-            </>
-        );
-    }
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------
-
     return (
         <>
             <Router>
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 4fr'}}>
-                <div style={{display: 'flex', flexDirection: 'column'}}>
+                <div style={{display: 'flex', flexDirection: 'column', border: '2px solid rgb(181 221 226)', boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.15)', padding: '5px', borderRadius: '3px'}}>
+                    <h3>Users</h3>
                     {users && users.map(user => <Link
-                        style={{padding: '10px', textDecoration: 'none', color: '#1d8694', boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.15)', margin: '5px'}}
+                        style={{padding: '10px', textDecoration: 'none', color: '#1d8694', boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.15)', margin: '5px', borderRadius: '3px', border: '2px solid rgb(181 221 226)'}}
                         to={`/conversation/${user.userID}`}>
-                        <span>{user.username}</span>
+                        <span>{user.self ? `${user.username} (you)` : user.username}</span>
                     </Link>)}
                 </div>
-                <div style={{width: '300px', margin: 'auto'}}>
+                <div style={{width: '100%', margin: 'auto'}}>
                     <div
-                        style={{width: '300px', margin: 'auto', border: `2px solid ${connected}`, borderRadius: '5px'}}>
+                        style={{margin: 'auto', border: `2px solid ${connected}`, borderRadius: '5px', padding: '20px'}}>
                         <Route path={'/'}>
                             <h1>ChatApp</h1>
                         </Route>
