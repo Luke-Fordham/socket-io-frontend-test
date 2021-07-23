@@ -7,28 +7,30 @@ const Room = () => {
     const [user, setUser] = useState<IUser>(null);
     const [sendMessage, setMessage] = useState<string>();
     const match = useRouteMatch()
-    const [messages, setMessages] = useState<{ content: string, fromSelf: boolean }[]>();
+    const [messages, setMessages] = useState<{ content: string, fromSelf: boolean }[]>([]);
 
     useEffect(() => {
         console.log(messages);
     }, [messages])
 
     useEffect(() => {
-        const getUser = async () => {
-            try {
-                const url = `http://localhost:8080/get-single-user/${match.params.id}`;
+        // const getMessages = async () => {
+        //     try {
+        //         const url = `http://localhost:8080/get-messages/${match.params.id}`;
+        //
+        //         const response = await fetch(url);
+        //         const results = await response.json();
+        //         console.log(results);
+        //         if (results.success) {
+        //             setMessages(results.user);
+        //         }
+        //     } catch (e) {
+        //         console.log(e.message);
+        //     }
+        // };
+        // getUser();
 
-                const response = await fetch(url);
-                const results = await response.json();
-                console.log(results);
-                if (results.success) {
-                    setUser(results.user);
-                }
-            } catch (e) {
-                console.log(e.message);
-            }
-        };
-        getUser();
+        socket.emit('join', match.params.id);
 
         return () => {
             setMessages([])
@@ -45,10 +47,10 @@ const Room = () => {
 
     const handleSend = () => {
         const sanitised = sendMessage?.split(' ').join('');
-        if (user && sendMessage && sanitised && sanitised.length > 0) {
+        if (match.params.id && sendMessage && sanitised && sanitised.length > 0) {
             socket.emit("private message", {
                 content: sendMessage,
-                to: user.userID
+                conversation: match.params.id
             });
             setMessages([...messages, {content: sendMessage, fromSelf: true}]);
             setMessage('');

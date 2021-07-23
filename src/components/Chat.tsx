@@ -14,6 +14,7 @@ export interface IUser {
 
 const Chat = ({user}) => {
     const [users, setUsers] = useState<IUser[]>();
+    const [conversations, setConversations] = useState<any>();
 
     useEffect(() => {
         users && console.log("USERS: \n", users);
@@ -41,16 +42,27 @@ const Chat = ({user}) => {
         });
     }, [users])
 
+    useEffect(() => {
+        socket.on('conversations', (e) => {
+            setConversations(e);
+        })
+    }, [conversations])
+
     return (
         <>
             <Router>
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 4fr'}}>
                 <div style={{display: 'flex', flexDirection: 'column', border: '2px solid rgb(181 221 226)', boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.15)', padding: '5px', borderRadius: '3px'}}>
-                    <h3>Users</h3>
-                    {users && users.map(user => <Link
+                    <h3>Conversations</h3>
+                    {/*{users && users.map(user => <Link*/}
+                    {/*    style={{padding: '10px', textDecoration: 'none', color: '#1d8694', boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.15)', margin: '5px', borderRadius: '3px', border: '2px solid rgb(181 221 226)'}}*/}
+                    {/*    to={`/conversation/${user.userID}`}>*/}
+                    {/*    <span>{user.self ? `${user.username} (you)` : user.username}</span>*/}
+                    {/*</Link>)}*/}
+                    {conversations && conversations.map(convo => <Link
                         style={{padding: '10px', textDecoration: 'none', color: '#1d8694', boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.15)', margin: '5px', borderRadius: '3px', border: '2px solid rgb(181 221 226)'}}
-                        to={`/conversation/${user.userID}`}>
-                        <span>{user.self ? `${user.username} (you)` : user.username}</span>
+                        to={`/conversation/${convo.id}`}>
+                        <span>{convo.name}</span>
                     </Link>)}
                 </div>
                 <div style={{width: '100%', margin: 'auto'}}>
