@@ -77,7 +77,7 @@ const Room = () => {
                     return (
                         <div style={{margin: align, display: 'flex', flexDirection: 'column'}}>
                         <div key={i} style={{backgroundColor: color, color: 'white', padding: '10px', borderRadius: '5px', textAlign: 'left', maxWidth: '70%', width: 'fit-content'}}>{message.content}</div>
-                            <label style={{margin: 'auto', padding: '5px'}}>{conversation && conversation.members && conversation.members.find(user => user.id === message.from)?.username}</label>
+                            <label style={{margin: 'auto', padding: '5px', fontSize: '12px'}}>{conversation && conversation.members && conversation.members.find(user => user.id === message.from)?.username}</label>
                         </div>
                     );
                 })}

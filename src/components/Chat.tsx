@@ -48,6 +48,13 @@ const Chat = () => {
         })
     }, [conversations])
 
+    const addConversation = () => {
+        socket.emit('new conversation', {
+            name: 'new conversation',
+            members: [1, 2]
+        })
+    }
+
     return (
         <>
             <Router>
@@ -64,12 +71,12 @@ const Chat = () => {
                         to={`/conversation/${convo.id}`}>
                         <span>{convo.name}</span>
                     </Link>)}
+                    <button onClick={addConversation}>New Conversation</button>
                 </div>
                 <div style={{width: '100%', margin: 'auto'}}>
                     <div
                         style={{margin: 'auto', borderRadius: '5px', padding: '20px'}}>
                         <Route path={'/'}>
-                            <h1>ChatApp</h1>
                         </Route>
                         <Switch>
                             <Route exact path='/conversation/:id/'>
