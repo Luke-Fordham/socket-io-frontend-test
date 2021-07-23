@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {createContext, useEffect, useState} from "react";
 import "./styles.css";
 import socket from './socket'
 import Chat from './components/Chat'
@@ -13,6 +13,8 @@ export interface UserOption {
     value: number;
     label: string
 }
+
+export const UserContext = createContext(null);
 
 export default function App() {
     const [user, setUser] = useState<IUser>(null);
@@ -63,6 +65,7 @@ export default function App() {
     }
 
     return (
+        <UserContext.Provider value={{user, setUser}}>
         <div className="App">
             {/*@ts-ignore*/}
             {!userSelected ?
@@ -74,5 +77,6 @@ export default function App() {
                 <Chat />
             }
         </div>
+        </UserContext.Provider>
     );
 }

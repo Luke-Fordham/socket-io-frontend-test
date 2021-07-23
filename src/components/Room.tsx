@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {useRouteMatch} from 'react-router-dom'
 import socket from "../socket";
 import {IUser} from "./Chat";
+import {UserContext} from "../App";
 
 const Room = () => {
-    const [user, setUser] = useState<{id: number, username: string}>(null);
+    const {user, setUser} = useContext(UserContext);
     const [sendMessage, setMessage] = useState<string>();
     const match = useRouteMatch()
     const [messages, setMessages] = useState<{ content: string, fromSelf: boolean, from?: number }[]>([]);
@@ -19,8 +20,8 @@ const Room = () => {
     }, [conversation])
 
     useEffect(() => {
-        setUser(JSON.parse(localStorage.getItem('user')));
-    }, [])
+        console.log(user)
+    }, [user])
 
     useEffect(() => {
         const getConversation = async () => {
