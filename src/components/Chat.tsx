@@ -12,7 +12,7 @@ export interface IUser {
     connected?: boolean;
 }
 
-const Chat = ({user}) => {
+const Chat = () => {
     const [users, setUsers] = useState<IUser[]>();
     const [conversations, setConversations] = useState<any>();
 

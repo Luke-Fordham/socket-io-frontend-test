@@ -56,6 +56,7 @@ export default function App() {
     const handleSubmit = () => {
         if (user) {
                 setUserSelected(true);
+                localStorage.setItem("user", JSON.stringify(user));
                 socket.auth = {username: user.username, userId: user.id};
                 socket.connect();
         }
@@ -70,7 +71,7 @@ export default function App() {
                     <Select onChange={({value}) => setUser(users[Number(value) -1])} options={userOptions}/>
                     <button onClick={handleSubmit}>Send</button>
                 </> :
-                <Chat user={user} />
+                <Chat />
             }
         </div>
     );

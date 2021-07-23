@@ -4,31 +4,39 @@ import socket from "../socket";
 import {IUser} from "./Chat";
 
 const Room = () => {
-    const [user, setUser] = useState<IUser>(null);
+    const [user, setUser] = useState<{id: number, username: string}>(null);
     const [sendMessage, setMessage] = useState<string>();
     const match = useRouteMatch()
-    const [messages, setMessages] = useState<{ content: string, fromSelf: boolean }[]>([]);
+    const [messages, setMessages] = useState<{ content: string, fromSelf: boolean, from?: number }[]>([]);
+    const [conversation, setConversation] = useState<any>();
 
     useEffect(() => {
         console.log(messages);
     }, [messages])
 
     useEffect(() => {
-        // const getMessages = async () => {
-        //     try {
-        //         const url = `http://localhost:8080/get-messages/${match.params.id}`;
-        //
-        //         const response = await fetch(url);
-        //         const results = await response.json();
-        //         console.log(results);
-        //         if (results.success) {
-        //             setMessages(results.user);
-        //         }
-        //     } catch (e) {
-        //         console.log(e.message);
-        //     }
-        // };
-        // getUser();
+        console.log(conversation);
+    }, [conversation])
+
+    useEffect(() => {
+        setUser(JSON.parse(localStorage.getItem('user')));
+    }, [])
+
+    useEffect(() => {
+        const getConversation = async () => {
+            try {
+                const url = `http://localhost:3001/get-conversation/${match.params.id}`;
+                const response = await fetch(url);
+                const results = await response.json();
+                console.log(results);
+                if (results.success) {
+                    setConversation(results.conversation);
+                }
+            } catch (e) {
+                console.log(e.message);
+            }
+        };
+        getConversation();
 
         socket.emit('join', match.params.id);
 
@@ -40,7 +48,7 @@ const Room = () => {
     useEffect(() => {
         if (messages) {
             socket.on("private message", ({ content, from }) => {
-                setMessages([...messages, {content, fromSelf: false}])
+                setMessages([...messages, {content, fromSelf: false, from}])
             });
         }
     }, [messages])
@@ -50,25 +58,26 @@ const Room = () => {
         if (match.params.id && sendMessage && sanitised && sanitised.length > 0) {
             socket.emit("private message", {
                 content: sendMessage,
-                conversation: match.params.id
+                conversation: match.params.id,
+                from: user.id
             });
-            setMessages([...messages, {content: sendMessage, fromSelf: true}]);
+            setMessages([...messages, {content: sendMessage, fromSelf: true, from: user.id}]);
             setMessage('');
         }
     }
 
     return (
         <>
-            <p>Room {user && user.userID}</p>
+            <p>{conversation && conversation.name}</p>
             <div style={{display: 'flex', flexDirection: 'column', padding: '10px'}}>
                 {messages && messages.map((message, i) => {
                     const color = message.fromSelf ? '#35b0f0' : 'grey';
                     const align = message.fromSelf ? '5px 0 5px auto' : '5px auto 5px 0';
                     return (
-                        <>
-                        <div key={i} style={{backgroundColor: color, color: 'white', padding: '10px', borderRadius: '5px', textAlign: 'left', maxWidth: '70%', width: 'fit-content', margin: align}}>{message.content}</div>
-                            <label>{message.fromSelf.toString()}</label>
-                        </>
+                        <div style={{margin: align, display: 'flex', flexDirection: 'column'}}>
+                        <div key={i} style={{backgroundColor: color, color: 'white', padding: '10px', borderRadius: '5px', textAlign: 'left', maxWidth: '70%', width: 'fit-content'}}>{message.content}</div>
+                            <label style={{margin: 'auto', padding: '5px'}}>{conversation && conversation.members && conversation.members.find(user => user.id === message.from)?.username}</label>
+                        </div>
                     );
                 })}
             </div>
