@@ -38,12 +38,12 @@ const Room = () => {
     }, [match && match.params.id])
 
     useEffect(() => {
-        if (messages && user) {
+        if (messages) {
             socket.on("private message", ({ content, from }) => {
-                user.userID === from && setMessages([...messages, {content, fromSelf: false}])
+                setMessages([...messages, {content, fromSelf: false}])
             });
         }
-    }, [messages, user])
+    }, [messages])
 
     const handleSend = () => {
         const sanitised = sendMessage?.split(' ').join('');
