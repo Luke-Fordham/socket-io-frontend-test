@@ -9,14 +9,20 @@ export interface IUser {
     username: string;
 }
 
+export interface UserOption {
+    value: number;
+    label: string
+}
+
 export default function App() {
     const [user, setUser] = useState<IUser>(null);
     const [userSelected, setUserSelected] = useState<boolean>(false);
     const [users, setUsers] = useState<IUser[]>();
+    const [userOptions, setUserOptions] = useState<UserOption[]>([]);
 
     useEffect(() => {
         const pullUsers = async () => {
-            const response = await fetch('http://localhost:8080/get-all-users');
+            const response = await fetch('http://localhost:3001/get-all-users');
             const results = await response.json();
             console.log(results);
             if (results.success) {
@@ -35,6 +41,18 @@ export default function App() {
         });
     }, [])
 
+    useEffect(() => {
+        console.log(user);
+    }, [user])
+
+    useEffect(() => {
+        if (users && users.length > 0){
+            setUserOptions(
+                users.map(user => { return {value: user.id, label: user.username}})
+            )
+        }
+    }, [users])
+
     const handleSubmit = () => {
         if (user) {
                 setUserSelected(true);
@@ -49,7 +67,7 @@ export default function App() {
             {!userSelected ?
                 <>
                     <h1>Select user</h1>
-                    <Select onChange={({value}) => setUser(users[Number(value)])} options={ users && users.length > 0 && users.map(user => { return {value: String(user.id), label: user.username}})}/>
+                    <Select onChange={({value}) => setUser(users[Number(value) -1])} options={userOptions}/>
                     <button onClick={handleSubmit}>Send</button>
                 </> :
                 <Chat user={user} />
