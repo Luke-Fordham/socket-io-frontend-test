@@ -46,6 +46,9 @@ const Chat = () => {
         socket.on('conversations', (e) => {
             setConversations(e);
         })
+        socket.on("new conversations", () => {
+            socket.emit("get conversations");
+        })
     }, [conversations])
 
     const addConversation = () => {
