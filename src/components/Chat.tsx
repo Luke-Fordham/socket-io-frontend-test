@@ -118,7 +118,7 @@ const Chat = () => {
                             to={`/conversation/${convo.id}`}>
                             <span>{convo.name}</span>
                         </Link>)}
-                        <button onClick={() => setShowModal(true)}>New Conversation</button>
+                        <button style={{margin: '5px'}} onClick={() => setShowModal(true)}>New Conversation</button>
                     </div>
                     <div style={{width: '100%', margin: 'auto'}}>
                         <div
