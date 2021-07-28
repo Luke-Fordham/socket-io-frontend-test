@@ -72,7 +72,7 @@ const Room = () => {
             <p>{conversation && conversation.name}</p>
             <div style={{display: 'flex', flexDirection: 'column', padding: '10px'}}>
                 {messages && messages.map((message, i) => {
-                    const color = message.fromSelf ? '#35b0f0' : 'grey';
+                    const color = message.fromSelf ? 'rgb(52 164 222)' : 'grey';
                     const align = message.fromSelf ? '5px 0 5px auto' : '5px auto 5px 0';
                     return (
                         <div style={{margin: align, display: 'flex', flexDirection: 'column', maxWidth: '70%'}}>
