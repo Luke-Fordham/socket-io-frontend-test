@@ -102,7 +102,8 @@ const Chat = () => {
                         border: '2px solid rgb(181 221 226)',
                         boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.15)',
                         padding: '5px',
-                        borderRadius: '3px'
+                        borderRadius: '3px',
+                        position: 'relative'
                     }}>
                         <h3>Conversations</h3>
                         {conversations && conversations.map(convo => <Link
@@ -118,7 +119,7 @@ const Chat = () => {
                             to={`/conversation/${convo.id}`}>
                             <span>{convo.name}</span>
                         </Link>)}
-                        <button style={{margin: '5px'}} onClick={() => setShowModal(true)}>New Conversation</button>
+                        <button style={{margin: '5px', position: 'absolute', bottom: '0', right: '0'}} onClick={() => setShowModal(true)}>New Conversation</button>
                     </div>
                     <div style={{width: '100%', margin: 'auto'}}>
                         <div

@@ -16,6 +16,11 @@ button {
   background-color: #90c9d1;
   font-weight: bold;
   cursor: pointer;
+  transition: background-color ease 0.3s;
+}
+
+button:hover {
+  background-color: #66a4ac;
 }
 
 textarea {
