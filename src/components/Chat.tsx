@@ -95,7 +95,7 @@ const Chat = () => {
                     </div>
                     </>
                 }
-                <div style={{display: 'grid', gridTemplateColumns: '1fr 4fr'}}>
+                <div style={{display: 'grid', gridTemplateColumns: '1fr 4fr', height: '100%'}}>
                     <div style={{
                         display: 'flex',
                         flexDirection: 'column',
@@ -105,7 +105,9 @@ const Chat = () => {
                         borderRadius: '3px',
                         position: 'relative'
                     }}>
-                        <h3>Conversations</h3>
+                        <div style={{padding: '15px 0'}}>
+                            <h3>Conversations</h3>
+                        </div>
                         {conversations && conversations.map(convo => <Link
                             style={{
                                 padding: '10px',
@@ -119,11 +121,11 @@ const Chat = () => {
                             to={`/conversation/${convo.id}`}>
                             <span>{convo.name}</span>
                         </Link>)}
-                        <button style={{margin: '5px', position: 'absolute', bottom: '0', right: '0'}} onClick={() => setShowModal(true)}>New Conversation</button>
+                        <button style={{margin: '5px', position: 'absolute', bottom: '10px', right: '10px'}} onClick={() => setShowModal(true)}>New Conversation</button>
                     </div>
-                    <div style={{width: '100%', margin: 'auto'}}>
+                    <div style={{width: '100%', margin: 'auto', height: '100%'}}>
                         <div
-                            style={{margin: 'auto', borderRadius: '5px', padding: '20px'}}>
+                            style={{margin: 'auto', borderRadius: '5px', padding: '20px', height: '100%', position: 'relative'}}>
                             <Route path={'/'}>
                             </Route>
                             <Switch>
