@@ -79,11 +79,12 @@ const Room = () => {
                 {messages && messages.map((message, i) => {
                     const color = message.fromSelf ? 'rgb(52 164 222)' : 'grey';
                     const align = message.fromSelf ? '5px 0 5px auto' : '5px auto 5px 0';
+                    const alignLabel = message.fromSelf ? 'auto 0 auto auto' : 'auto auto auto 0';
                     return (
                         <div style={{margin: align, display: 'flex', flexDirection: 'column', maxWidth: '70%'}}>
                         <div key={i} style={{backgroundColor: color, color: 'white', padding: '10px', borderRadius: '5px', textAlign: 'left', width: 'fit-content', boxShadow: 'rgb(0 0 0 / 24%) 0px 0px 5px 0px'}} dangerouslySetInnerHTML={{__html: message.content}}>
                         </div>
-                            <label style={{margin: 'auto', padding: '5px', fontSize: '12px'}}>{conversation && conversation.members && conversation.members.find(user => user.id === message.from)?.username}</label>
+                            <label style={{margin: alignLabel, padding: '5px', fontSize: '12px'}}>{conversation && conversation.members && conversation.members.find(user => user.id === message.from)?.username}</label>
                         </div>
                     );
                 })}
