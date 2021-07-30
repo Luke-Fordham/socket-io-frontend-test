@@ -41,6 +41,12 @@ const Chat = () => {
 
     const addConversation = () => {
         if (addingMembers && addingMembers.length > 0){
+            if (newConvName){
+                const sanitised = newConvName?.split(' ').join('');
+                if (!sanitised || sanitised && sanitised.length <= 0){
+                    return;
+                }
+            }
             console.log({
                 name: newConvName,
                 members: addingMembers
@@ -49,6 +55,7 @@ const Chat = () => {
                 name: newConvName,
                 members: addingMembers
             })
+            setShowModal(false);
         }
     }
 
@@ -72,7 +79,8 @@ const Chat = () => {
         height: '50vh',
         backgroundColor: 'white',
         position: 'absolute',
-        zIndex: 101
+        zIndex: 101,
+        borderRadius: '5px'
     }
 
     return (
@@ -82,7 +90,15 @@ const Chat = () => {
                     <>
                     <div style={modalContent}>
                         <div style={{position: 'relative', width: '100%', height: '100%'}}>
-                            <Select isMulti options={userOptions} onChange={(e: UserOption[]) => setAddingMembers(e)}/>
+                            <div style={{width: '50%', margin: 'auto', padding: '20px 0'}} className={'form'}>
+                                <div style={{padding: '20px'}}>
+                                    <h3>New Conversation</h3>
+                                </div>
+                                <div>
+                                    <input placeholder={'Conversation name'} style={{width: '100%'}} onChange={(e) => setNewConvName(e.target.value)}/>
+                                </div>
+                                <Select placeholder={'Select members...'} isMulti options={userOptions} onChange={(e: UserOption[]) => setAddingMembers(e)}/>
+                            </div>
                             <button style={{display: 'block', margin: 'auto', position: 'absolute', bottom: '20px', right: '20px'}} onClick={addConversation}>
                                 Add conversation
                             </button>
@@ -97,10 +113,11 @@ const Chat = () => {
                         display: 'flex',
                         flexDirection: 'column',
                         border: '2px solid rgb(181 221 226)',
-                        boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.15)',
+                        boxShadow: 'rgb(0 0 0 / 24%) 0px 0px 5px 0px',
                         padding: '5px',
                         borderRadius: '3px',
-                        position: 'relative'
+                        position: 'relative',
+                        backgroundColor: '#f8f8f82b',
                     }}>
                         <div style={{padding: '15px 0'}}>
                             <h3>Conversations</h3>
@@ -109,14 +126,15 @@ const Chat = () => {
                             style={{
                                 padding: '10px',
                                 textDecoration: 'none',
-                                color: '#1d8694',
+                                color: 'white',
                                 boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.15)',
                                 margin: '5px',
                                 borderRadius: '3px',
-                                border: '2px solid rgb(181 221 226)'
+                                backgroundImage: 'linear-gradient(344deg, rgba(42, 211, 241, 0.61), rgb(13 156 139 / 31%))',
+                                backgroundColor: '#5dc2d4'
                             }}
                             to={`/conversation/${convo.id}`}>
-                            <span>{convo.name}</span>
+                            <span><strong>{convo.name}</strong></span>
                         </Link>)}
                         <button style={{margin: '5px', position: 'absolute', bottom: '10px', right: '10px'}} onClick={() => setShowModal(true)}>New Conversation</button>
                     </div>
