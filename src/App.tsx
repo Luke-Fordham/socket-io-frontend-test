@@ -69,11 +69,13 @@ export default function App() {
         <div className="App">
             {/*@ts-ignore*/}
             {!userSelected ?
-                <>
-                    <h1>Select user</h1>
+                <div className={'centered-box'}>
+                    <div>
+                        <h1>Select user</h1>
+                    </div>
                     <Select onChange={({value}) => setUser(users[Number(value) -1])} options={userOptions}/>
                     <button onClick={handleSubmit}>Send</button>
-                </> :
+                </div> :
                 <Chat />
             }
         </div>

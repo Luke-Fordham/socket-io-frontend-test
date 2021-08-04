@@ -3,6 +3,7 @@ import {useRouteMatch} from 'react-router-dom'
 import socket from "../socket";
 import {IUser} from "./Chat";
 import {UserContext} from "../App";
+import TinyEditor from "./TextInput/TinyMCE";
 
 const Room = () => {
     const {user, setUser} = useContext(UserContext);
@@ -22,6 +23,10 @@ const Room = () => {
     useEffect(() => {
         console.log(user)
     }, [user])
+
+    useEffect(() => {
+        console.log(sendMessage);
+    }, [sendMessage])
 
     useEffect(() => {
         const getConversation = async () => {
@@ -67,11 +72,6 @@ const Room = () => {
         }
     }
 
-    const addEmoji = () => {
-        const augmented = `${sendMessage ? sendMessage : ''}&#128512;`
-        setMessage(augmented);
-    }
-
     return (
         <>
             <h2>{conversation && conversation.name}</h2>
@@ -90,9 +90,14 @@ const Room = () => {
                 })}
             </div>
             <div style={{margin: '100px auto 0', width: 'fit-content', position: 'absolute', bottom: '0', left: '0', right: '0', paddingBottom: '20px', display: 'flex'}}>
-                <div className={'emoji-icon'} onClick={addEmoji}>
-                    &#9787;</div>
-                <textarea value={sendMessage && sendMessage} onChange={(e) => setMessage(e.target.value)} style={{height: '50px', width: '500px'}} />
+                {/*<div className={'emoji-icon'}>*/}
+                {/*    <div style={{margin: 'auto'}} onClick={addEmoji}>*/}
+                {/*        &#9787;</div>*/}
+                {/*</div>*/}
+                {/*<textarea value={sendMessage && sendMessage} onChange={(e) => setMessage(e.target.value)} style={{height: '50px', width: '500px'}} />*/}
+                <div style={{height: '100px', width: '500px'}}>
+                    <TinyEditor data={sendMessage} change={(e) => setMessage(e)}/>
+                </div>
                 <div style={{margin: 'auto 0 auto auto'}}>
                     <button onClick={handleSend} style={{margin: 'auto 10px'}}>Send</button>
                 </div>
