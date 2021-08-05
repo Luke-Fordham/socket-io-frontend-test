@@ -50,7 +50,7 @@ const Chat = () => {
     }, [conversations])
 
     const addConversation = () => {
-        const newArray = addingMembers;
+        const newArray = [...addingMembers];
         newArray.push({value: user.id, label: user.username});
         if (addingMembers && addingMembers.length > 0) {
             if (newConvName) {

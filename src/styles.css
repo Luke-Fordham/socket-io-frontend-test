@@ -40,6 +40,10 @@ textarea, input {
     border-radius: 3px;
 }
 
+input {
+    margin: 0;
+}
+
 textarea:focus-visible, input:focus-visible {
     outline: none;
     border: 2px solid #90c9d1;

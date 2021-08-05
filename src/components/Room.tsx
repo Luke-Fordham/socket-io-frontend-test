@@ -82,20 +82,35 @@ const Room = () => {
     }
 
     const getGifs = async () => {
-        const query = 'minion';
-        const response = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=cRHbfmbMXKzXYuHp2AdLFPTfXEGKvS7d&q=${query}&limit=10&offset=0&rating=g&lang=en`);
-        const results = await response.json();
-        results.data && setModal({
-            show: true, content: (
-                <div style={modalContentStyle}>
-                    <div style={{position: 'relative', width: '100%', height: '100%', display: 'flex', flexWrap: 'wrap'}}>
-                        {results.data.map(gif => <img style={{cursor: 'pointer'}} src={gif.images.original.url} onClick={sendGif}/>)}
+        let query = '';
+        const search = async () => {
+            const response = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=cRHbfmbMXKzXYuHp2AdLFPTfXEGKvS7d&q=${query}&limit=10&offset=0&rating=g&lang=en`);
+            const results = await response.json();
+            results.data && setModal({
+                show: true, content: modalContent(
+                    results.data.map(gif => <img style={{cursor: 'pointer'}} src={gif.images.original.url} onClick={sendGif}/>
+                    )
+                )
+            })
+        }
+        setModal({
+            show: true,
+            content: modalContent(
+                    <div style={{width: '50%', margin: 'auto', padding: '20px 0', display: 'flex'}} className={'form'}>
+                        <input autoFocus style={{flexGrow: 2}} placeholder={'Search...'} onChange={(e) => query = e.target.value}  />
+                        <button onClick={search}>search</button>
                     </div>
-                </div>
             )
         })
-
     }
+
+    const modalContent = (content) => (
+        <div style={modalContentStyle}>
+            <div style={{position: 'relative', width: '100%', height: '100%', display: 'flex', flexWrap: 'wrap'}}>
+                {content}
+            </div>
+        </div>
+    )
 
     const modalContentStyle: CSSProperties = {
         margin: '10% auto auto auto',
