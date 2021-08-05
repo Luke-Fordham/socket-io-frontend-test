@@ -3,7 +3,8 @@ import socket from '../socket';
 import {Link, Switch, Route, BrowserRouter as Router} from 'react-router-dom'
 import Room from './Room';
 import Select from "react-select";
-import {UserContext, UserOption} from "../App";
+import {ModalContext, UserContext, UserOption} from "../App";
+import Modal from "./Modal";
 
 export interface IUser {
     hasNewMessages: boolean;
@@ -17,7 +18,7 @@ export interface IUser {
 const Chat = () => {
     const {user, setUser} = useContext(UserContext);
     const [conversations, setConversations] = useState<any>();
-    const [showModal, setShowModal] = useState<boolean>(false);
+    const {modal, setModal} = useContext(ModalContext);
     const [userOptions, setUserOptions] = useState<UserOption[]>([]);
     const [addingMembers, setAddingMembers] = useState<UserOption[]>();
     const [newConvName, setNewConvName] = useState<string>(null);
@@ -66,7 +67,7 @@ const Chat = () => {
                 name: newConvName,
                 members: newArray
             })
-            setShowModal(false);
+            setModal({...modal, show: false});
         }
     }
 
@@ -74,17 +75,7 @@ const Chat = () => {
         setAddingMembers(e);
     }
 
-    const modalBackground: CSSProperties = {
-        top: '0',
-        right: '0',
-        bottom: '0',
-        left: '0',
-        backgroundColor: '#00000082',
-        position: 'absolute',
-        zIndex: 100
-    }
-
-    const modalContent: CSSProperties = {
+    const modalContentStyle: CSSProperties = {
         margin: '10% auto auto auto',
         top: '0',
         right: '0',
@@ -98,39 +89,36 @@ const Chat = () => {
         borderRadius: '5px'
     }
 
+    const modalContent = (
+        <div style={modalContentStyle}>
+            <div style={{position: 'relative', width: '100%', height: '100%'}}>
+                <div style={{width: '50%', margin: 'auto', padding: '20px 0'}} className={'form'}>
+                    <div style={{padding: '20px'}}>
+                        <h3>New Conversation</h3>
+                    </div>
+                    <div>
+                        <input placeholder={'Conversation name'} style={{width: '100%'}}
+                               onChange={(e) => setNewConvName(e.target.value)}/>
+                    </div>
+                    <Select placeholder={'Select members...'} isMulti options={userOptions}
+                            onChange={addUserOption}/>
+                </div>
+                <button style={{
+                    display: 'block',
+                    margin: 'auto',
+                    position: 'absolute',
+                    bottom: '20px',
+                    right: '20px'
+                }} onClick={addConversation}>
+                    Add conversation
+                </button>
+            </div>
+        </div>
+    )
+
     return (
         <>
             <Router>
-                {showModal &&
-                <>
-                    <div style={modalContent}>
-                        <div style={{position: 'relative', width: '100%', height: '100%'}}>
-                            <div style={{width: '50%', margin: 'auto', padding: '20px 0'}} className={'form'}>
-                                <div style={{padding: '20px'}}>
-                                    <h3>New Conversation</h3>
-                                </div>
-                                <div>
-                                    <input placeholder={'Conversation name'} style={{width: '100%'}}
-                                           onChange={(e) => setNewConvName(e.target.value)}/>
-                                </div>
-                                <Select placeholder={'Select members...'} isMulti options={userOptions}
-                                        onChange={addUserOption}/>
-                            </div>
-                            <button style={{
-                                display: 'block',
-                                margin: 'auto',
-                                position: 'absolute',
-                                bottom: '20px',
-                                right: '20px'
-                            }} onClick={addConversation}>
-                                Add conversation
-                            </button>
-                        </div>
-                    </div>
-                    <div style={modalBackground} onClick={() => setShowModal(false)}>
-                    </div>
-                </>
-                }
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 4fr', height: '100%'}}>
                     <div style={{
                         display: 'flex',
@@ -161,7 +149,7 @@ const Chat = () => {
                             <span><strong>{convo.name}</strong></span>
                         </Link>)}
                         <button style={{margin: '5px', position: 'absolute', bottom: '10px', right: '10px'}}
-                                onClick={() => setShowModal(true)}>New Conversation
+                                onClick={() => setModal({show: true, content: modalContent})}>New Conversation
                         </button>
                     </div>
                     <div style={{width: '100%', margin: 'auto', height: '100%'}}>

@@ -1,8 +1,9 @@
-import React, {createContext, useEffect, useState} from "react";
+import React, {createContext, ReactElement, useEffect, useState} from "react";
 import "./styles.css";
 import socket from './socket'
 import Chat from './components/Chat'
 import Select from 'react-select'
+import Modal from "./components/Modal";
 
 export interface IUser {
     id: number;
@@ -14,10 +15,22 @@ export interface UserOption {
     label: string
 }
 
+export interface IModal {
+    show: boolean;
+    content: ReactElement;
+}
+
 export const UserContext = createContext(null);
+export const ModalContext = createContext(null);
 
 export default function App() {
     const [user, setUser] = useState<IUser>(null);
+    const [modal, setModal] = useState<IModal>({
+        show: false,
+        content:
+            <React.Fragment>
+            </React.Fragment>
+    });
     const [userSelected, setUserSelected] = useState<boolean>(false);
     const [users, setUsers] = useState<IUser[]>();
     const [userOptions, setUserOptions] = useState<UserOption[]>([]);
@@ -66,7 +79,9 @@ export default function App() {
 
     return (
         <UserContext.Provider value={{user, setUser}}>
+            <ModalContext.Provider value={{modal, setModal}}>
         <div className="App">
+            {modal.show && <Modal />}
             {/*@ts-ignore*/}
             {!userSelected ?
                 <div className={'centered-box'}>
@@ -79,6 +94,7 @@ export default function App() {
                 <Chat />
             }
         </div>
+            </ModalContext.Provider>
         </UserContext.Provider>
     );
 }

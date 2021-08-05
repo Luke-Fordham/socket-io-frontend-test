@@ -45,19 +45,18 @@ textarea:focus-visible, input:focus-visible {
     border: 2px solid #90c9d1;
 }
 
-/*.emoji-icon {*/
-/*    width: 50px;*/
-/*    font-size: 40px;*/
-/*    height: 100px;*/
-/*    color: #a0a0a0;*/
-/*    transition: all ease 0.3s;*/
-/*    display: flex;*/
-/*}*/
+.gif-icon {
+    width: 50px;
+    height: 100px;
+    color: #a0a0a0;
+    transition: all ease 0.3s;
+    display: flex;
+}
 
-/*.emoji-icon:hover {*/
-/*    color: grey;*/
-/*    cursor: pointer;*/
-/*}*/
+.gif-icon:hover {
+    padding-bottom: 20px;
+    cursor: pointer;
+}
 
 .form > div {
     padding: 10px 0;

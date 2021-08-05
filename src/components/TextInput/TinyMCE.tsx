@@ -31,13 +31,10 @@ const TinyEditor = (props: ITinyEditorProps) => {
                         'charmap print preview anchor help',
                         'searchreplace visualblocks code',
                         'insertdatetime media table paste wordcount',
-                        'emoticons',
-                        'image'
+                        'emoticons'
                     ],
                     toolbar:
-                        'emoticons | image',
-                    image_list: [
-                        {title: 'My image 1', value: 'https://www.engiel.com/wp-content/uploads/2018/07/gif-applauso-3.gif'}],
+                        'emoticons',
                     toolbar_location: 'bottom',
                     // 'undo redo | formatselect | bold italic | \
                     // alignleft aligncenter alignright | \
