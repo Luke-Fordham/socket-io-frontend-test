@@ -107,7 +107,7 @@ const Room = () => {
         return (
         <div style={modalContentStyle}>
             <div style={{position: 'relative', width: '100%', height: '100%', display: 'flex', flexWrap: 'wrap'}}>
-                <div style={{width: '50%', margin: 'auto', padding: '20px 0', display: 'flex'}} className={'form'}>
+                <div style={{width: '400px', margin: 'auto auto auto 20px', padding: '20px 0', display: 'flex', position: 'fixed'}} className={'form'}>
                     <input autoFocus style={{flexGrow: 2, marginRight: '5px'}} placeholder={'Search...'} onChange={(e) => query = e.target.value}  />
                     <button onClick={() => search(query)}>search</button>
                 </div>
