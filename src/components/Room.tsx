@@ -81,7 +81,13 @@ const Room = () => {
         const results = await response.json();
         results.data && setModal({
             show: true, content: modalContent(
-                results.data.map(gif => <div style={{flexGrow: 2}}><img loading={'lazy'} style={{cursor: 'pointer', width: '100%', height: '100%', objectFit: 'cover'}} src={gif.images.original.url} onClick={sendGif}/></div>
+                results.data.map(gif => <div style={{flexGrow: 2}}>
+                        <img loading={'lazy'}
+                             className={'pointer full-size'}
+                             style={{objectFit: 'cover'}}
+                             src={gif.images.original.url}
+                             onClick={sendGif}/>
+                    </div>
                 )
             )
         })
@@ -90,55 +96,40 @@ const Room = () => {
     const modalContent = (content) => {
         let query = '';
         return (
-        <div style={modalContentStyle}>
-            <div style={{position: 'relative', width: '100%', height: '100%', display: 'flex', flexWrap: 'wrap'}}>
-                <div style={{width: '400px', margin: 'auto auto auto 20px', padding: '20px 0', display: 'flex', position: 'fixed'}} className={'form'}>
-                    <input autoFocus style={{flexGrow: 2, marginRight: '5px'}} placeholder={'Search...'} onChange={(e) => query = e.target.value}  />
-                    <button onClick={() => search(query)}>search</button>
+            <div className={'modal-content scroll'}>
+                <div
+                    className={'pos-rel full-size flex flex-wrap'}>
+                    <div className={'search-left-fixed flex'}>
+                        <input autoFocus style={{flexGrow: 2, marginRight: '5px'}} placeholder={'Search...'}
+                               onChange={(e) => query = e.target.value}/>
+                        <button onClick={() => search(query)}>search</button>
+                    </div>
+                    {content}
                 </div>
-                {content}
             </div>
-        </div>
-    )}
-
-    const modalContentStyle: CSSProperties = {
-        margin: '10% auto auto auto',
-        top: '0',
-        right: '0',
-        bottom: '0',
-        left: '0',
-        width: '40vw',
-        height: '50vh',
-        backgroundColor: 'white',
-        position: 'absolute',
-        zIndex: 101,
-        borderRadius: '5px',
-        overflowY: 'scroll'
+        )
     }
 
 
     return (
         <>
-            <div style={{height: '80px', display: 'flex', flexDirection: 'column', backgroundColor: '#f8f8f8', boxShadow: 'rgb(0 0 0 / 9%) 0px 2px 24px 4px', borderRadius: '15px', margin: 'auto', width: '60%'}}>
-                <h2 style={{margin: 'auto'}}>{conversation && conversation.name}</h2>
+            <div
+                className={'flex flex-col m-auto white-background conv-title'}
+                >
+                <h2 className={'m-auto'}>{conversation && conversation.name}</h2>
             </div>
-            <div style={{display: 'flex', flexDirection: 'column', padding: '30px'}}>
+            <div className={'flex flex-col'} style={{padding: '30px'}}>
                 {messages && messages.map((message, i) => {
-                    const color = message.fromSelf ? 'rgb(52 164 222)' : 'grey';
+                    const name = message.fromSelf ? 'accent-background' : 'grey-background';
                     const align = message.fromSelf ? '5px 0 5px auto' : '5px auto 5px 0';
-                    const alignLabel = message.fromSelf ? 'auto 0 auto auto' : 'auto auto auto 0';
+                    const alignLabel = message.fromSelf ? 'right' : 'left';
                     return (
-                        <div style={{margin: align, display: 'flex', flexDirection: 'column', maxWidth: '70%'}}>
-                            <div key={i} style={{
-                                backgroundColor: color,
-                                color: 'white',
-                                padding: '10px',
-                                borderRadius: '5px',
-                                textAlign: 'left',
-                                width: 'fit-content',
-                                boxShadow: 'rgb(0 0 0 / 24%) 0px 0px 5px 0px',
-                                margin: alignLabel
-                            }} dangerouslySetInnerHTML={{__html: message.content}}>
+                        <div
+                            className={'flex flex-col'}
+                            style={{margin: align, maxWidth: '70%'}}>
+                            <div key={i}
+                                 className={`message ${name} ${alignLabel}`}
+                                 dangerouslySetInnerHTML={{__html: message.content}}>
                             </div>
                             <label style={{
                                 margin: alignLabel,
@@ -149,25 +140,18 @@ const Room = () => {
                     );
                 })}
             </div>
-            <div style={{
-                margin: '100px auto 0',
-                width: 'fit-content',
-                position: 'absolute',
-                bottom: '0',
-                left: '0',
-                right: '0',
-                paddingBottom: '30px',
-                display: 'flex'
-            }}>
+            <div className={'message-input flex pos-ab'}>
                 <div className={'gif-icon'} onClick={getGifs}>
-                    <div style={{margin: 'auto'}}>
+                    <div className={'m-auto'}>
                         <img style={{width: '50%'}} src={gifIcon}/>
                     </div>
                 </div>
-                <div style={{height: '100px', width: '500px', backgroundColor: 'white', boxShadow: 'rgb(0 0 0 / 7%) 0px 2px 24px 4px', borderRadius: '10px'}}>
+                <div
+                    className={'tinyMCE-wrapper'}
+                >
                     <TinyEditor data={sendMessage} change={(e) => setMessage(e)}/>
                 </div>
-                <div style={{margin: 'auto 0 auto auto'}}>
+                <div className={'right'}>
                     <button onClick={handleSend} style={{margin: 'auto 10px'}}>Send</button>
                 </div>
             </div>

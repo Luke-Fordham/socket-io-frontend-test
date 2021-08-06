@@ -22,6 +22,7 @@ export interface IModal {
 
 export const UserContext = createContext(null);
 export const ModalContext = createContext(null);
+export const ThemeContext = createContext(null);
 
 export default function App() {
     const [user, setUser] = useState<IUser>(null);
@@ -34,6 +35,16 @@ export default function App() {
     const [userSelected, setUserSelected] = useState<boolean>(false);
     const [users, setUsers] = useState<IUser[]>();
     const [userOptions, setUserOptions] = useState<UserOption[]>([]);
+    const [dark, setDark] = useState<boolean>(false);
+    const [theme, setTheme] = useState<string>('light-mode');
+
+    useEffect(() => {
+        let theme = 'light-mode'
+        if (dark){
+            theme = 'dark-mode'
+        }
+        setTheme(theme);
+    }, [dark])
 
     useEffect(() => {
         const pullUsers = async () => {
@@ -80,20 +91,22 @@ export default function App() {
     return (
         <UserContext.Provider value={{user, setUser}}>
             <ModalContext.Provider value={{modal, setModal}}>
-        <div className="App">
+                <ThemeContext.Provider value={{dark, setDark}}>
+        <div className={`App ${theme && theme}`}>
+            <button className={'pos-ab m-auto top-right'} style={{zIndex: 110}} onClick={() => setDark(!dark)}>{dark ? 'Light' : 'Dark'}</button>
             {modal.show && <Modal />}
-            {/*@ts-ignore*/}
             {!userSelected ?
                 <div className={'centered-box'}>
                     <div>
                         <h1>Select user</h1>
                     </div>
-                    <Select onChange={({value}) => setUser(users[Number(value) -1])} options={userOptions}/>
+                    <Select className={'react-select'} onChange={({value}) => setUser(users[Number(value) -1])} options={userOptions}/>
                     <button onClick={handleSubmit}>Send</button>
                 </div> :
                 <Chat />
             }
         </div>
+                </ThemeContext.Provider>
             </ModalContext.Provider>
         </UserContext.Provider>
     );

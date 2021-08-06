@@ -41,17 +41,13 @@ const Chat = () => {
     }, [])
 
     useEffect(() => {
-        console.log("OPTIONS", addingMembers)
-    }, [addingMembers])
-
-    useEffect(() => {
         socket.on('conversations', (e) => {
             setConversations(e);
         })
     }, [conversations])
 
     const addConversation = () => {
-        const newArray = [...addingMembers];
+        const newArray = addingMembers ? [...addingMembers] : [];
         newArray.push({value: user.id, label: user.username});
         if (addingMembers && addingMembers.length > 0) {
             if (newConvName) {
@@ -76,41 +72,23 @@ const Chat = () => {
         setAddingMembers(e);
     }
 
-    const modalContentStyle: CSSProperties = {
-        margin: '10% auto auto auto',
-        top: '0',
-        right: '0',
-        bottom: '0',
-        left: '0',
-        width: '40vw',
-        height: '50vh',
-        backgroundColor: 'white',
-        position: 'absolute',
-        zIndex: 101,
-        borderRadius: '5px'
-    }
 
     const modalContent = (
-        <div style={modalContentStyle}>
-            <div style={{position: 'relative', width: '100%', height: '100%'}}>
-                <div style={{width: '50%', margin: 'auto', padding: '20px 0'}} className={'form'}>
+        <div className={'modal-content'}>
+            <div className={'pos-rel full-size'}>
+                <div className={'m-auto form'}>
                     <div style={{padding: '20px'}}>
                         <h3>New Conversation</h3>
                     </div>
                     <div>
-                        <input placeholder={'Conversation name'} style={{width: '100%'}}
+                        <input placeholder={'Conversation name'}
+                               className={'full-size'}
                                onChange={(e) => setNewConvName(e.target.value)}/>
                     </div>
                     <Select placeholder={'Select members...'} isMulti options={userOptions}
                             onChange={addUserOption}/>
                 </div>
-                <button style={{
-                    display: 'block',
-                    margin: 'auto',
-                    position: 'absolute',
-                    bottom: '20px',
-                    right: '20px'
-                }} onClick={addConversation}>
+                <button className={'bottom-right m-auto'} onClick={addConversation}>
                     Add conversation
                 </button>
             </div>
@@ -120,56 +98,40 @@ const Chat = () => {
     return (
         <>
             <Router>
-                <div style={{display: 'grid', gridTemplateColumns: '1fr 4fr', height: '100%'}}>
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        position: 'relative',
-                        backgroundColor: '#fcfcfc',
-                        borderLeft: '20px #5dc2d4 solid'
+                <div style={{display: 'grid', gridTemplateColumns: '30px 1fr 4fr', height: '100%'}}>
+                    <div style={{gridColumnStart: 1, gridColumnEnd: 3, gridRow: 1, borderRadius: '0 0 20px 0', backgroundColor: '#655FAF'}}>
+                    </div>
+                    <div
+                        className={'pos-rel flex flex-col white-background big-shadow'}
+                        style={{
+                        gridColumn: 2,
+                        gridRow: 1,
+                        borderRadius: '20px 0px 20px 0'
                     }}>
-                        <div style={{padding: '15px 0', height: '120px', display: 'flex', flexDirection: 'column'}}>
+                        <div className={'flex flex-col'} style={{padding: '15px 0', height: '120px'}}>
                             <h2 className={'centered-text'}>Conversations</h2>
                         </div>
                         {conversations && conversations.map(convo => {
-                            let color = '';
+                            let name = '';
                             if (convo.id === selectedConv){
-                                color = '#5252521f';
+                                name = 'hover-background';
                             }
                             return (<Link
-                                className={'conversation-link'}
+                                className={`conversation-link flex flex-col ${name}`}
                                 onClick={() => {
                                     setSelectedConv(convo.id)
-                                }}
-                                style={{
-                                    padding: '10px',
-                                    textDecoration: 'none',
-                                    boxShadow: 'rgb(0 0 0 / 7%) 0px 2px 4px 0px',
-                                    height: '80px',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    backgroundColor: color
                                 }}
                                 to={`/conversation/${convo.id}`}>
                                 <span className={'centered-text'}>{convo.name}</span>
                             </Link>);
                         })}
-                        <button style={{margin: '5px', position: 'absolute', bottom: '20px', right: '20px'}}
+                        <button className={'bottom-right m-auto'}
                                 onClick={() => setModal({show: true, content: modalContent})}>New Conversation
                         </button>
                     </div>
-                    <div style={{width: '100%', margin: 'auto', height: '100%'}}>
+                    <div className={'m-auto full-size'}>
                         <div
-                            style={{
-                                margin: 'auto',
-                                borderRadius: '5px',
-                                height: '100%',
-                                position: 'relative',
-                                display: 'grid',
-                                gridTemplateRows: '120px 1fr'
-                            }}>
-                            <Route path={'/'}>
-                            </Route>
+                            className={'grid m-auto room-container pos-rel'}>
                             <Switch>
                                 <Route exact path='/conversation/:id/'>
                                     <Room/>
