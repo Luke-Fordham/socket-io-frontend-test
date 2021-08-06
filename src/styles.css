@@ -12,10 +12,11 @@
 
 .dark-mode {
     --text: #fcfcfc;
-    --base: rgb(44, 41, 62);
+    --base: rgb(44, 43, 56);
     --modal: rgb(188 188 188 / 22%);
     --small-btm-shadow: rgb(0 0 0 / 28%) 0px 2px 4px 0px;
     --big-shadow: rgb(0 0 0 / 28%) 0px 2px 4px 0px;
+    transition: all ease 0.5s;
 }
 
 .light-mode {
@@ -24,6 +25,7 @@
     --modal: rgba(0, 0, 0, 0.51);
     --small-btm-shadow: rgb(0 0 0 / 7%) 0px 2px 4px 0px;
     --big-shadow: rgb(0 0 0 / 15%) 0px 4px 41px;
+    transition: all ease 0.5s;
 }
 
 * {
