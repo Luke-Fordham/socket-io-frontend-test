@@ -82,8 +82,6 @@ const Room = () => {
     }
 
     const getGifs = async () => {
-        let query = '';
-
         setModal({
             show: true,
             content: modalContent(null)
@@ -92,11 +90,11 @@ const Room = () => {
 
 
     const search = async (query) => {
-        const response = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=cRHbfmbMXKzXYuHp2AdLFPTfXEGKvS7d&q=${query}&limit=10&offset=0&rating=g&lang=en`);
+        const response = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=cRHbfmbMXKzXYuHp2AdLFPTfXEGKvS7d&q=${query}&limit=25&offset=0&rating=g&lang=en`);
         const results = await response.json();
         results.data && setModal({
             show: true, content: modalContent(
-                results.data.map(gif => <img style={{cursor: 'pointer'}} src={gif.images.original.url} onClick={sendGif}/>
+                results.data.map(gif => <div style={{flexGrow: 2}}><img loading={'lazy'} style={{cursor: 'pointer', width: '100%', height: '100%', objectFit: 'cover'}} src={gif.images.original.url} onClick={sendGif}/></div>
                 )
             )
         })
@@ -134,7 +132,9 @@ const Room = () => {
 
     return (
         <>
-            <h2>{conversation && conversation.name}</h2>
+            <div style={{height: '80px', display: 'flex', flexDirection: 'column', backgroundColor: '#f8f8f8', boxShadow: 'rgb(0 0 0 / 11%) 0px 0px 17px 2px'}}>
+                <h2 style={{margin: 'auto'}}>{conversation && conversation.name}</h2>
+            </div>
             <div style={{display: 'flex', flexDirection: 'column', padding: '10px'}}>
                 {messages && messages.map((message, i) => {
                     const color = message.fromSelf ? 'rgb(52 164 222)' : 'grey';
@@ -176,7 +176,7 @@ const Room = () => {
                         <img style={{width: '50%'}} src={gifIcon}/>
                     </div>
                 </div>
-                <div style={{height: '100px', width: '500px', backgroundColor: 'white', border: '1px solid #ccc'}}>
+                <div style={{height: '100px', width: '500px', backgroundColor: 'white', outline: '1px solid #ccc'}}>
                     <TinyEditor data={sendMessage} change={(e) => setMessage(e)}/>
                 </div>
                 <div style={{margin: 'auto 0 auto auto'}}>

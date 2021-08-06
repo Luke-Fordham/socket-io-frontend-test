@@ -123,9 +123,8 @@ const Chat = () => {
                     <div style={{
                         display: 'flex',
                         flexDirection: 'column',
-                        border: '2px solid rgb(181 221 226)',
                         boxShadow: '0 0 17px 2px #00000036',
-                        padding: '5px',
+                        padding: '10px',
                         borderRadius: '3px',
                         position: 'relative',
                         backgroundColor: '#f8f8f82b',
@@ -157,7 +156,6 @@ const Chat = () => {
                             style={{
                                 margin: 'auto',
                                 borderRadius: '5px',
-                                padding: '20px',
                                 height: '100%',
                                 position: 'relative'
                             }}>
