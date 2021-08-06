@@ -10,9 +10,13 @@
 }
 
 body {
-    color: #525252;
-    background-color: #f8f8f8;
-    background-image: linear-gradient(-225deg, #FFFEFF 0%, rgb(45 193 212 / 29%) 100%);
+    color: #484848;
+    background-color: rgb(230, 238, 240);
+    background-image: linear-gradient(45deg, rgb(93 194 212 / 23%), transparent);
+}
+
+a {
+    color: #484848;
 }
 
 button {
@@ -86,4 +90,17 @@ textarea:focus-visible, input:focus-visible {
 
 .centered-box > div {
     margin: 20px 0;
+}
+
+.centered-text {
+    margin: auto auto auto 30px;
+}
+
+.conversation-link:hover {
+    background-color: #5252521f;
+}
+
+.tox-tinymce {
+    border-radius: 10px !important;
+    border: 2px #dadada solid !important;
 }

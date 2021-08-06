@@ -12,25 +12,9 @@ const Room = () => {
     const {user, setUser} = useContext(UserContext);
     const [sendMessage, setMessage] = useState<string>();
     const match = useRouteMatch()
-    const [messages, setMessages] = useState<{ content: string, fromSelf: boolean, from?: number }[]>([]);
+    const [messages, setMessages] = useState<{ content: string, fromSelf: boolean, from?: number, time?: string }[]>([]);
     const [conversation, setConversation] = useState<any>();
     const {modal, setModal} = useContext(ModalContext);
-
-    // useEffect(() => {
-    //     console.log(messages);
-    // }, [messages])
-    //
-    // useEffect(() => {
-    //     console.log(conversation);
-    // }, [conversation])
-    //
-    // useEffect(() => {
-    //     console.log(user)
-    // }, [user])
-    //
-    // useEffect(() => {
-    //     console.log(sendMessage);
-    // }, [sendMessage])
 
     useEffect(() => {
         const getConversation = async () => {
@@ -57,21 +41,24 @@ const Room = () => {
 
     useEffect(() => {
         if (messages) {
-            socket.on("private message", ({content, from}) => {
-                setMessages([...messages, {content, fromSelf: false, from}])
+            socket.on("private message", ({content, from, time}) => {
+                setMessages([...messages, {content, fromSelf: false, from, time}])
             });
         }
     }, [messages])
 
     const handleSend = () => {
+        const date = new Date();
+        const timestamp = `${date.getHours()}:${date.getMinutes()}`;
         const sanitised = sendMessage?.split(' ').join('');
         if (match.params.id && sendMessage && sanitised && sanitised.length > 0) {
             socket.emit("private message", {
                 content: sendMessage,
                 conversation: match.params.id,
-                from: user.id
+                from: user.id,
+                time: timestamp
             });
-            setMessages([...messages, {content: sendMessage, fromSelf: true, from: user.id}]);
+            setMessages([...messages, {content: sendMessage, fromSelf: true, from: user.id, time: timestamp}]);
             setMessage('');
         }
     }
@@ -132,10 +119,10 @@ const Room = () => {
 
     return (
         <>
-            <div style={{height: '80px', display: 'flex', flexDirection: 'column', backgroundColor: '#f8f8f8', boxShadow: 'rgb(0 0 0 / 11%) 0px 0px 17px 2px'}}>
+            <div style={{height: '80px', display: 'flex', flexDirection: 'column', backgroundColor: '#f8f8f8', boxShadow: 'rgb(0 0 0 / 9%) 0px 2px 24px 4px', borderRadius: '15px', margin: 'auto', width: '60%'}}>
                 <h2 style={{margin: 'auto'}}>{conversation && conversation.name}</h2>
             </div>
-            <div style={{display: 'flex', flexDirection: 'column', padding: '10px'}}>
+            <div style={{display: 'flex', flexDirection: 'column', padding: '30px'}}>
                 {messages && messages.map((message, i) => {
                     const color = message.fromSelf ? 'rgb(52 164 222)' : 'grey';
                     const align = message.fromSelf ? '5px 0 5px auto' : '5px auto 5px 0';
@@ -149,14 +136,15 @@ const Room = () => {
                                 borderRadius: '5px',
                                 textAlign: 'left',
                                 width: 'fit-content',
-                                boxShadow: 'rgb(0 0 0 / 24%) 0px 0px 5px 0px'
+                                boxShadow: 'rgb(0 0 0 / 24%) 0px 0px 5px 0px',
+                                margin: alignLabel
                             }} dangerouslySetInnerHTML={{__html: message.content}}>
                             </div>
                             <label style={{
                                 margin: alignLabel,
                                 padding: '5px',
                                 fontSize: '12px'
-                            }}>{conversation && conversation.members && conversation.members.find(user => user.id === message.from)?.username}</label>
+                            }}>{conversation && conversation.members && conversation.members.find(user => user.id === message.from)?.username}: {message.time && message.time}</label>
                         </div>
                     );
                 })}
@@ -168,7 +156,7 @@ const Room = () => {
                 bottom: '0',
                 left: '0',
                 right: '0',
-                paddingBottom: '20px',
+                paddingBottom: '30px',
                 display: 'flex'
             }}>
                 <div className={'gif-icon'} onClick={getGifs}>
@@ -176,7 +164,7 @@ const Room = () => {
                         <img style={{width: '50%'}} src={gifIcon}/>
                     </div>
                 </div>
-                <div style={{height: '100px', width: '500px', backgroundColor: 'white', outline: '1px solid #ccc'}}>
+                <div style={{height: '100px', width: '500px', backgroundColor: 'white', boxShadow: 'rgb(0 0 0 / 7%) 0px 2px 24px 4px', borderRadius: '10px'}}>
                     <TinyEditor data={sendMessage} change={(e) => setMessage(e)}/>
                 </div>
                 <div style={{margin: 'auto 0 auto auto'}}>

@@ -14,7 +14,7 @@ export interface ITinyEditorProps {
 const TinyEditor = (props: ITinyEditorProps) => {
 
     return (
-        <div id={props.id} className={'tinyEditor'} style={{width: '100%', boxShadow: 'rgb(0 0 0 / 3%) 0px 0px 6px 0px', margin: '0'}}>
+        <div id={props.id} className={'tinyEditor'} style={{width: '100%', boxShadow: 'rgb(0 0 0 / 3%) 0px 0px 6px 0px', margin: '0', borderRadius: '10px'}}>
             <Editor
                 disabled={props.disabled && props.disabled}
                 apiKey={'3uetdnfxyie6hcovs461qfnxn0jhknjqq0r3yla8brosmpk5'}

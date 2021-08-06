@@ -22,6 +22,7 @@ const Chat = () => {
     const [userOptions, setUserOptions] = useState<UserOption[]>([]);
     const [addingMembers, setAddingMembers] = useState<UserOption[]>();
     const [newConvName, setNewConvName] = useState<string>(null);
+    const [selectedConv, setSelectedConv] = useState<number>();
 
     useEffect(() => {
         const pullUsers = async () => {
@@ -123,31 +124,37 @@ const Chat = () => {
                     <div style={{
                         display: 'flex',
                         flexDirection: 'column',
-                        boxShadow: '0 0 17px 2px #00000036',
-                        padding: '10px',
-                        borderRadius: '3px',
                         position: 'relative',
-                        backgroundColor: '#f8f8f82b',
-                        backgroundImage: 'linear-gradient(355deg, #1ecbeb45, transparent)'
+                        backgroundColor: '#fcfcfc',
+                        borderLeft: '20px #5dc2d4 solid'
                     }}>
-                        <div style={{padding: '15px 0'}}>
-                            <h3>Conversations</h3>
+                        <div style={{padding: '15px 0', height: '120px', display: 'flex', flexDirection: 'column'}}>
+                            <h2 className={'centered-text'}>Conversations</h2>
                         </div>
-                        {conversations && conversations.map(convo => <Link
-                            style={{
-                                padding: '10px',
-                                textDecoration: 'none',
-                                color: 'white',
-                                boxShadow: '0px 0px 5px 0px rgba(0,0,0,0.15)',
-                                margin: '5px',
-                                borderRadius: '3px',
-                                backgroundImage: 'linear-gradient(344deg, rgba(42, 211, 241, 0.61), rgb(13 156 139 / 31%))',
-                                backgroundColor: '#5dc2d4'
-                            }}
-                            to={`/conversation/${convo.id}`}>
-                            <span><strong>{convo.name}</strong></span>
-                        </Link>)}
-                        <button style={{margin: '5px', position: 'absolute', bottom: '10px', right: '10px'}}
+                        {conversations && conversations.map(convo => {
+                            let color = '';
+                            if (convo.id === selectedConv){
+                                color = '#5252521f';
+                            }
+                            return (<Link
+                                className={'conversation-link'}
+                                onClick={() => {
+                                    setSelectedConv(convo.id)
+                                }}
+                                style={{
+                                    padding: '10px',
+                                    textDecoration: 'none',
+                                    boxShadow: 'rgb(0 0 0 / 7%) 0px 2px 4px 0px',
+                                    height: '80px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    backgroundColor: color
+                                }}
+                                to={`/conversation/${convo.id}`}>
+                                <span className={'centered-text'}>{convo.name}</span>
+                            </Link>);
+                        })}
+                        <button style={{margin: '5px', position: 'absolute', bottom: '20px', right: '20px'}}
                                 onClick={() => setModal({show: true, content: modalContent})}>New Conversation
                         </button>
                     </div>
@@ -157,7 +164,9 @@ const Chat = () => {
                                 margin: 'auto',
                                 borderRadius: '5px',
                                 height: '100%',
-                                position: 'relative'
+                                position: 'relative',
+                                display: 'grid',
+                                gridTemplateRows: '120px 1fr'
                             }}>
                             <Route path={'/'}>
                             </Route>
