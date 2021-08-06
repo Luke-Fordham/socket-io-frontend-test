@@ -46,7 +46,6 @@
     color: #242424 !important;
 }
 
-
 a {
     color: var(--text);
     text-decoration: none;
@@ -69,7 +68,7 @@ button:hover {
 }
 
 textarea, input {
-    border: 1px solid var(--accent);
+    border: 1px solid var(--light-grey);
     padding: 5px;
     font-family: sans-serif;
     color: var(--grey);

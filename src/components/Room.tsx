@@ -49,7 +49,7 @@ const Room = () => {
 
     const handleSend = () => {
         const date = new Date();
-        const timestamp = `${date.getHours()}:${date.getMinutes()}`;
+        const timestamp = `${date.getHours()}:${String(date.getMinutes()).padStart(2, "0")}`;
         const sanitised = sendMessage?.split(' ').join('');
         if (match.params.id && sendMessage && sanitised && sanitised.length > 0) {
             socket.emit("private message", {

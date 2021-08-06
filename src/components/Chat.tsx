@@ -85,7 +85,7 @@ const Chat = () => {
                                className={'full-size'}
                                onChange={(e) => setNewConvName(e.target.value)}/>
                     </div>
-                    <Select placeholder={'Select members...'} isMulti options={userOptions}
+                    <Select className={'react-select'} placeholder={'Select members...'} isMulti options={userOptions}
                             onChange={addUserOption}/>
                 </div>
                 <button className={'bottom-right m-auto'} onClick={addConversation}>
