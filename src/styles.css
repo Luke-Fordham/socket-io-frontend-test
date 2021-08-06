@@ -4,27 +4,27 @@
     --accent: rgb(101, 95, 175);
     --accent-hov: #433e7d;
     --grey: #525252;
-    --gradient: linear-gradient(45deg, rgb(55 50 116 / 10%), rgb(101 95 175 / 32%));
+    --gradient: linear-gradient(45deg, #3732741a, #655faf52);
     --hover: #5252521f;
     --light-grey: #dadada;
-    --btn-shadow: rgb(0 0 0 / 24%) 0px 0px 5px 0px;
+    --btn-shadow: #0000003d 0px 0px 5px 0px;
 }
 
 .dark-mode {
     --text: #fcfcfc;
-    --base: rgb(44, 43, 56);
-    --modal: rgb(188 188 188 / 22%);
-    --small-btm-shadow: rgb(0 0 0 / 28%) 0px 2px 4px 0px;
-    --big-shadow: rgb(0 0 0 / 28%) 0px 2px 4px 0px;
+    --base: #2c2b38;
+    --modal: #bcbcbc38;
+    --small-btm-shadow: #00000047 0px 2px 4px 0px;
+    --big-shadow: #00000047 0px 2px 4px 0px;
     transition: all ease 0.5s;
 }
 
 .light-mode {
     --base: #fcfcfc;
     --text: #242424;
-    --modal: rgba(0, 0, 0, 0.51);
-    --small-btm-shadow: rgb(0 0 0 / 7%) 0px 2px 4px 0px;
-    --big-shadow: rgb(0 0 0 / 15%) 0px 4px 41px;
+    --modal: #00000082;
+    --small-btm-shadow: #00000012 0px 2px 4px 0px;
+    --big-shadow: #00000026 0px 4px 41px;
     transition: all ease 0.5s;
 }
 
