@@ -93,7 +93,7 @@ export default function App() {
             <ModalContext.Provider value={{modal, setModal}}>
                 <ThemeContext.Provider value={{dark, setDark}}>
         <div className={`App ${theme && theme}`}>
-            <button className={'pos-ab m-auto top-right'} style={{zIndex: 110}} onClick={() => setDark(!dark)}>{dark ? 'Light' : 'Dark'}</button>
+            <button className={'pos-ab m-auto top-right'} style={{zIndex: 110}} onClick={() => setDark(!dark)}>{dark ? <h2 style={{padding: '0 2px'}}>&#9728;</h2> : <h2 style={{paddingRight: '4px'}}>&#9789;</h2>}</button>
             {modal.show && <Modal />}
             {!userSelected ?
                 <div className={'centered-box'}>

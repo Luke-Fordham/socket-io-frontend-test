@@ -4,7 +4,7 @@ import socket from "../socket";
 import {IUser} from "./Chat";
 import {ModalContext, UserContext} from "../App";
 import TinyEditor from "./TextInput/TinyMCE";
-import gifIcon from '../assets/gif_icon.png';
+import gifIcon from '../assets/gif_icon_purple.png';
 import Modal from "./Modal";
 import Select from "react-select";
 
@@ -143,7 +143,7 @@ const Room = () => {
             <div className={'message-input flex pos-ab'}>
                 <div className={'gif-icon'} onClick={getGifs}>
                     <div className={'m-auto'}>
-                        <img style={{width: '50%'}} src={gifIcon}/>
+                        <img style={{width: '80%'}} src={gifIcon}/>
                     </div>
                 </div>
                 <div
