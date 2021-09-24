@@ -1,10 +1,10 @@
-import React, {CSSProperties, useContext, useEffect, useState} from "react";
+import React, {CSSProperties, useContext, useEffect, useRef, useState} from "react";
 import {useRouteMatch} from 'react-router-dom'
 import socket from "../socket";
 import {IUser} from "./Chat";
 import {ModalContext, UserContext} from "../App";
 import TinyEditor from "./TextInput/TinyMCE";
-import gifIcon from '../assets/gif_icon_purple.png';
+import gifIcon from '../assets/gif_icon.png';
 import Modal from "./Modal";
 import Select from "react-select";
 
@@ -141,10 +141,12 @@ const Room = () => {
                 })}
             </div>
             <div className={'message-input flex pos-ab'}>
+                <div id={'mytoolbar'} style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly'}}>
                 <div className={'gif-icon'} onClick={getGifs}>
-                    <div className={'m-auto'}>
-                        <img style={{width: '80%'}} src={gifIcon}/>
+                    <div className={'white-background full-size m-auto flex'} style={{borderRadius: '7px', border: '#d4d4d4 1px solid'}}>
+                        <img style={{width: '24px', margin: 'auto'}} src={gifIcon}/>
                     </div>
+                </div>
                 </div>
                 <div
                     className={'tinyMCE-wrapper'}

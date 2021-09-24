@@ -1,3 +1,17 @@
+*::-webkit-scrollbar {
+    width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background-color: var(--light-grey);
+    border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--accent);
+    border-radius: 10px;
+}
+
 :root {
     --light: #fcfcfc;
     --dark: rgb(44, 41, 62);
@@ -86,13 +100,13 @@ textarea:focus-visible, input:focus-visible {
 
 .gif-icon {
     width: 50px;
-    height: 100px;
     transition: all ease 0.3s;
     display: flex;
+    height: 40px;
+    border-radius: 10px;
 }
 
 .gif-icon:hover {
-    padding-bottom: 20px;
     cursor: pointer;
 }
 
@@ -272,11 +286,13 @@ textarea:focus-visible, input:focus-visible {
     left: 0px;
     right: 0px;
     padding-bottom: 30px;
+    gap: 5px;
 }
 
 .tinyMCE-wrapper {
     height: 100px;
     width: 500px;
+    /*background-color: var(--base);*/
     background-color: var(--base);
     box-shadow: var(--big-shadow);
     border-radius: 10px;
@@ -292,4 +308,31 @@ textarea:focus-visible, input:focus-visible {
     background-color: var(--modal);
     position: absolute;
     z-index: 100;
+}
+
+.tinyEditor {
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+    border: 2px solid transparent;
+    transition: border ease 0.5s;
+}
+
+.tinyEditor:focus-within {
+    border: 2px solid var(--accent);
+}
+
+.mce-content-body {
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+    text-align: left;
+    border-radius: 10px;
+    background-color: var(--base);
+    overflow-y: auto;
+}
+
+.mce-content-body:focus-visible {
+    border: none;
+    outline: none;
 }

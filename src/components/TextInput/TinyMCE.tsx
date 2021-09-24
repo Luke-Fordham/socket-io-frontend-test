@@ -20,6 +20,7 @@ const TinyEditor = (props: ITinyEditorProps) => {
                 disabled={props.disabled && props.disabled}
                 apiKey={'3uetdnfxyie6hcovs461qfnxn0jhknjqq0r3yla8brosmpk5'}
                 value={props.data && props.data}
+                inline
                 init={{
                     height: 100,
                     skin: 'material-classic',
@@ -34,8 +35,8 @@ const TinyEditor = (props: ITinyEditorProps) => {
                     ],
                     toolbar:
                         'emoticons',
-                    toolbar_location: 'bottom',
-                    content_style: `body { font-family:Helvetica, Arial, sans-serif; font-size: 14px; color: rgba(0, 0, 0, 0.6);}`
+                    // toolbar_location: 'bottom'
+                    fixed_toolbar_container: '#mytoolbar'
                 }}
                 onEditorChange={props.change}
             />
