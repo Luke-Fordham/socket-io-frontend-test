@@ -2,6 +2,7 @@ import React, {createContext, ReactElement, useEffect, useState} from "react";
 import "./styles.css";
 import socket from './socket'
 import Chat from './components/Chat'
+import {Redirect, BrowserRouter as Router} from 'react-router-dom'
 import Select from 'react-select'
 import Modal from "./components/Modal";
 
@@ -97,6 +98,9 @@ export default function App() {
             {modal.show && <Modal />}
             {!userSelected ?
                 <div className={'centered-box'}>
+                    <Router>
+                        <Redirect to={"/"} />
+                    </Router>
                     <div>
                         <h1>Select user</h1>
                     </div>
