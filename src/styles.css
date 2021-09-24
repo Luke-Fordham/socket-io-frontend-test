@@ -336,3 +336,24 @@ textarea:focus-visible, input:focus-visible {
     border: none;
     outline: none;
 }
+
+.tox-toolbar__primary {
+    background-color: var(--base) !important;
+}
+
+.tox-tbtn svg {
+    fill: var(--text) !important;
+}
+
+.tox-tbtn:hover {
+    background: none !important;
+    cursor: pointer;
+}
+
+.tox-editor-header {
+    border: none !important;
+}
+
+.tox-toolbar-overlord {
+    border: #d4d4d4 1px solid !important;
+}

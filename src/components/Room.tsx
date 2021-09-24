@@ -143,8 +143,8 @@ const Room = () => {
             <div className={'message-input flex pos-ab'}>
                 <div id={'mytoolbar'} style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly'}}>
                 <div className={'gif-icon'} onClick={getGifs}>
-                    <div className={'full-size m-auto flex'} style={{borderRadius: '7px', border: '#d4d4d4 1px solid', background: 'white'}}>
-                        <img style={{width: '24px', margin: 'auto'}} src={gifIcon}/>
+                    <div className={'white-background full-size m-auto flex'} style={{borderRadius: '7px', border: '#d4d4d4 1px solid'}}>
+                        <div className={'m-auto'}><h4>GIF</h4></div>
                     </div>
                 </div>
                 </div>
