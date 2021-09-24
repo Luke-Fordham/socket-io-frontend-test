@@ -71,7 +71,7 @@ const Room = () => {
     const getGifs = async () => {
         setModal({
             show: true,
-            content: modalContent(null)
+            content: <ModalContent content={null} />
         })
     }
 
@@ -80,7 +80,7 @@ const Room = () => {
         const response = await fetch(`https://api.giphy.com/v1/gifs/search?api_key=cRHbfmbMXKzXYuHp2AdLFPTfXEGKvS7d&q=${query}&limit=25&offset=0&rating=g&lang=en`);
         const results = await response.json();
         results.data && setModal({
-            show: true, content: modalContent(
+            show: true, content: <ModalContent content={
                 results.data.map(gif => <div style={{flexGrow: 2}}>
                         <img loading={'lazy'}
                              className={'pointer full-size'}
@@ -89,11 +89,11 @@ const Room = () => {
                              onClick={sendGif}/>
                     </div>
                 )
-            )
+            } />
         })
     }
 
-    const modalContent = (content) => {
+    const ModalContent = ({content}) => {
         let query = '';
         return (
             <div className={'modal-content scroll'}>
@@ -104,7 +104,7 @@ const Room = () => {
                                onChange={(e) => query = e.target.value}/>
                         <button onClick={() => search(query)}>search</button>
                     </div>
-                    {content}
+                    {content && content}
                 </div>
             </div>
         )

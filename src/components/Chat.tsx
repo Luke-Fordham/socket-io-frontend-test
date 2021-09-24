@@ -20,8 +20,6 @@ const Chat = () => {
     const [conversations, setConversations] = useState<any>();
     const {modal, setModal} = useContext(ModalContext);
     const [userOptions, setUserOptions] = useState<UserOption[]>([]);
-    const [addingMembers, setAddingMembers] = useState<UserOption[]>();
-    const [newConvName, setNewConvName] = useState<string>(null);
     const [selectedConv, setSelectedConv] = useState<number>();
 
     useEffect(() => {
@@ -46,54 +44,58 @@ const Chat = () => {
         })
     }, [conversations])
 
-    const addConversation = () => {
-        const newArray = addingMembers ? [...addingMembers] : [];
-        newArray.push({value: user.id, label: user.username});
-        if (addingMembers && addingMembers.length > 0) {
-            if (newConvName) {
-                const sanitised = newConvName?.split(' ').join('');
-                if (!sanitised || sanitised && sanitised.length <= 0) {
-                    return;
-                }
-            }
-            console.log({
-                name: newConvName,
-                members: newArray
-            })
-            socket.emit('new conversation', {
-                name: newConvName,
-                members: newArray
-            })
-            setModal({...modal, show: false});
+
+    const Content = () => {
+        const [newConvName, setNewConvName] = useState<string>(null);
+        const [addingMembers, setAddingMembers] = useState<UserOption[]>();
+        const addUserOption = (e: UserOption[]) => {
+            setAddingMembers(e);
         }
-    }
-
-    const addUserOption = (e: UserOption[]) => {
-        setAddingMembers(e);
-    }
-
-
-    const modalContent = (
-        <div className={'modal-content'}>
-            <div className={'pos-rel full-size'}>
-                <div className={'m-auto form'}>
-                    <div style={{padding: '20px'}}>
-                        <h3>New Conversation</h3>
+        const addConversation = () => {
+            const newArray = addingMembers ? [...addingMembers] : [];
+            newArray.push({value: user.id, label: user.username});
+            console.log(newArray);
+            if (addingMembers && addingMembers.length > 0) {
+                if (newConvName) {
+                    console.log('here');
+                    const sanitised = newConvName?.split(' ').join('');
+                    if (!sanitised || sanitised && sanitised.length <= 0) {
+                        return;
+                    }
+                }
+                console.log({
+                    name: newConvName,
+                    members: newArray
+                })
+                socket.emit('new conversation', {
+                    name: newConvName,
+                    members: newArray
+                })
+                setModal({...modal, show: false});
+            }
+        }
+        return (
+            <div className={'modal-content'}>
+                <div className={'pos-rel full-size'}>
+                    <div className={'m-auto form'}>
+                        <div style={{padding: '20px'}}>
+                            <h3>New Conversation</h3>
+                        </div>
+                        <div>
+                            <input placeholder={'Conversation name'}
+                                   className={'full-size'}
+                                   onChange={(e) => setNewConvName(e.target.value)}/>
+                        </div>
+                        <Select className={'react-select'} placeholder={'Select members...'} isMulti options={userOptions}
+                                onChange={addUserOption}/>
                     </div>
-                    <div>
-                        <input placeholder={'Conversation name'}
-                               className={'full-size'}
-                               onChange={(e) => setNewConvName(e.target.value)}/>
-                    </div>
-                    <Select className={'react-select'} placeholder={'Select members...'} isMulti options={userOptions}
-                            onChange={addUserOption}/>
+                    <button className={'bottom-right m-auto'} onClick={addConversation}>
+                        Add conversation
+                    </button>
                 </div>
-                <button className={'bottom-right m-auto'} onClick={addConversation}>
-                    Add conversation
-                </button>
             </div>
-        </div>
-    )
+        )
+    }
 
     return (
         <>
@@ -126,7 +128,7 @@ const Chat = () => {
                             </Link>);
                         })}
                         <button className={'bottom-right m-auto'}
-                                onClick={() => setModal({show: true, content: modalContent})}>New Conversation
+                                onClick={() => setModal({show: true, content: <Content />})}>New Conversation
                         </button>
                     </div>
                     <div className={'m-auto full-size'}>
